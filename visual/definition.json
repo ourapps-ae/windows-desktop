@@ -1,0 +1,29 @@
+{
+  "id": "ourapps-ae.windows-desktop",
+  "name": "Windows desktop",
+  "kind": "component",
+  "status": "example",
+  "package": "ourapps-ae/windows-desktop",
+  "version": "0.4.0",
+  "ports": [
+    {
+      "id": "configuration",
+      "name": "Host configuration",
+      "direction": "input",
+      "kind": "interface",
+      "type": "ae/windows-desktop-configuration",
+      "version": "1.0.0",
+      "required": false,
+      "cardinality": "one"
+    },
+    {
+      "id": "facility",
+      "name": "Windows desktop",
+      "direction": "output",
+      "kind": "interface",
+      "type": "ae/desktop-host",
+      "version": "1.0.0"
+    }
+  ],
+  "settings": []
+}

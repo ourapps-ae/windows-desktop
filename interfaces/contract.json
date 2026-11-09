@@ -1,0 +1,83 @@
+{
+  "id": "facility",
+  "type": "ae/desktop-host",
+  "version": "1.0.0",
+  "operations": {
+    "start": {
+      "arguments": [
+        "settings:DesktopSettings"
+      ],
+      "returns": "Promise<BrowserWindow>"
+    },
+    "build": {
+      "arguments": [
+        "settings:{webRoot:string,outputRoot:string}"
+      ],
+      "returns": "Promise<void>"
+    },
+    "createPolicy": {
+      "arguments": [
+        "settings:DesktopSettings"
+      ],
+      "returns": "Policy"
+    },
+    "createShell": {
+      "arguments": [
+        "settings:DesktopSettings",
+        "electron:typeof import('electron')",
+        "policy:Policy"
+      ],
+      "returns": "Shell"
+    },
+    "verifyWindow": {
+      "arguments": [
+        "win:Electron.BrowserWindow",
+        "callbacks:{entry:string,enterDisplay:()=>Promise<unknown>,enterPlayer:()=>Promise<unknown>,rendered:()=>Promise<boolean>}"
+      ],
+      "returns": "Promise<Record<string,boolean>>"
+    },
+    "writeResult": {
+      "arguments": [
+        "context:SanitizedExecutionContext",
+        "observed:Record<string,boolean>"
+      ],
+      "returns": "Promise<HelperResult>"
+    },
+    "profilePath": {
+      "arguments": [
+        "contextFile:string"
+      ],
+      "returns": "string"
+    }
+  },
+  "exports": {
+    "verification/desktop.cjs": [
+      "verifyWindow(win:Electron.BrowserWindow,callbacks:{entry:string,enterDisplay:()=>Promise<unknown>,enterPlayer:()=>Promise<unknown>,rendered:()=>Promise<boolean>}):Promise<Record<string,boolean>>",
+      "writeResult(context:SanitizedExecutionContext,observed:Record<string,boolean>):Promise<HelperResult>",
+      "profilePath(contextFile:string):string"
+    ],
+    "desktop/src/main.cjs": [
+      "DesktopSettings={scheme:string,appName:string,partition:string,serverOrigin:string,webRoot:string,modeEvent:string,externalOrigins:string[]}; start(settings:DesktopSettings):Promise<BrowserWindow>"
+    ],
+    "desktop/src/policy.cjs": [
+      "createPolicy(settings:DesktopSettings):{ORIGIN:string,ENTRY:string,SCHEME:Electron.CustomScheme,trustedURL:(value:string)=>boolean,trustedPage:(value:string)=>boolean,playerPage:(value:string)=>boolean,externalURL:(value:string)=>boolean,assetPath:(root:string,value:string)=>Promise<string|null>,assetResponse:(root:string,request:{url:string,method:string})=>Promise<Response>,mediaAllowed:(request:{page:string,origin:string,permission:string,interacted:boolean,mainFrame:boolean,mediaTypes:string[]})=>boolean}"
+    ],
+    "desktop/src/shell.cjs": [
+      "preferences",
+      "createShell(settings:DesktopSettings,electron:typeof import('electron'),policy:ReturnType<typeof createPolicy>):{preferences:Electron.WebPreferences,installPermissions:(session:Electron.Session,state:ShellState)=>void,createWindow:(session:Electron.Session,state:ShellState,options?:{show?:boolean,icon?:string})=>Electron.BrowserWindow,configureSession:(session:Electron.Session,root:string,state:ShellState)=>void,ENTRY:string}; ShellState={window:Electron.BrowserWindow|null,interacted:boolean,generation?:number,modeReady?:Promise<unknown>}"
+    ],
+    "desktop/scripts/build.cjs": [
+      "build(settings:{webRoot:string,outputRoot:string}):Promise<void>"
+    ]
+  },
+  "requirements": {
+    "configuration": "Supply absolute webRoot and outputRoot, a lowercase custom scheme, appName, partition, modeEvent, exact serverOrigin and externalOrigins. Server origin must be secure except explicit loopback. External origins must use secure transport and contain no path or credentials."
+  },
+  "buildInputs": "Policy/build checks use Node 26.5.0 and npm 11.17.0. Standalone examples/desktop/package-lock.json locks Electron 45.0.0, electron-builder 26.15.3 and archive inspection. scripts/package-consumer.cjs consumes the production web builder and desktop sources; check-package.cjs verifies unsigned executables, packaged bytes and resources. Windows runtime remains unverified.",
+  "configurationPort": {
+    "id": "configuration",
+    "type": "ae/windows-desktop-configuration",
+    "version": "1.0.0"
+  },
+  "lifecycle": "Call start once before Electron is ready so the scheme and sandbox are registered. Supply an absolute packaged webRoot. Display mode is read from document.documentElement.dataset.mode; the supplied modeEvent refreshes the page marker. Only an interacted player main frame may capture. Board navigation invalidates pending permission generations; all windows closing quits the application."
+}

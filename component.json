@@ -1,0 +1,466 @@
+{
+  "format": 2,
+  "kind": "component",
+  "identity": {
+    "name": "ourapps-ae/windows-desktop",
+    "version": "0.4.0",
+    "sourceRevision": "19905b75dbea89fbfd424d67fe26c81aaed0e018",
+    "sourceTreeDigest": "0000000000000000000000000000000000000000000000000000000000000000",
+    "licenceStatus": "deferred"
+  },
+  "facilities": [
+    {
+      "id": "desktop-host",
+      "description": "Configured Electron host with local assets and capture/navigation policies."
+    }
+  ],
+  "documents": {
+    "contract": "CONTRACT.md",
+    "interfaces": [
+      "interfaces/contract.json",
+      "interfaces/required/configuration.json",
+      "suitability.json"
+    ],
+    "examples": [
+      "examples/consumer.cjs"
+    ],
+    "licenceNotice": "LICENCE"
+  },
+  "collect": [],
+  "files": [
+    {
+      "path": "CONTRACT.md",
+      "executable": false
+    },
+    {
+      "path": "INSTRUCTIONS.md",
+      "executable": false
+    },
+    {
+      "path": "LICENCE",
+      "executable": false
+    },
+    {
+      "path": "SOURCE.json",
+      "executable": false
+    },
+    {
+      "path": "SOURCE.md",
+      "executable": false
+    },
+    {
+      "path": "examples/consumer.cjs",
+      "executable": false
+    },
+    {
+      "path": "examples/desktop/main.cjs",
+      "executable": false
+    },
+    {
+      "path": "examples/desktop/package-lock.json",
+      "executable": false
+    },
+    {
+      "path": "examples/desktop/package.json",
+      "executable": false
+    },
+    {
+      "path": "examples/desktop/web/build.cjs",
+      "executable": false
+    },
+    {
+      "path": "examples/desktop/web/client.js",
+      "executable": false
+    },
+    {
+      "path": "examples/desktop/web/index.html",
+      "executable": false
+    },
+    {
+      "path": "examples/desktop/web/package.json",
+      "executable": false
+    },
+    {
+      "path": "implementation/desktop/scripts/build.cjs",
+      "executable": false
+    },
+    {
+      "path": "implementation/desktop/src/main.cjs",
+      "executable": false
+    },
+    {
+      "path": "implementation/desktop/src/policy.cjs",
+      "executable": false
+    },
+    {
+      "path": "implementation/desktop/src/shell.cjs",
+      "executable": false
+    },
+    {
+      "path": "implementation/verification/desktop.cjs",
+      "executable": false
+    },
+    {
+      "path": "interfaces/contract.json",
+      "executable": false
+    },
+    {
+      "path": "interfaces/required/configuration.json",
+      "executable": false
+    },
+    {
+      "path": "package-lock.json",
+      "executable": false
+    },
+    {
+      "path": "package.json",
+      "executable": false
+    },
+    {
+      "path": "scripts/check-package-rejection.cjs",
+      "executable": false
+    },
+    {
+      "path": "scripts/check-package.cjs",
+      "executable": false
+    },
+    {
+      "path": "scripts/package-consumer.cjs",
+      "executable": false
+    },
+    {
+      "path": "scripts/platform-check.cjs",
+      "executable": false
+    },
+    {
+      "path": "suitability.json",
+      "executable": false
+    },
+    {
+      "path": "tests/fixtures/index.html",
+      "executable": false
+    },
+    {
+      "path": "tests/package-staging.test.cjs",
+      "executable": false
+    },
+    {
+      "path": "tests/policy.test.cjs",
+      "executable": false
+    },
+    {
+      "path": "tests/result.test.cjs",
+      "executable": false
+    },
+    {
+      "path": "tests/runtime.test.cjs",
+      "executable": false
+    },
+    {
+      "path": "tools.lock.json",
+      "executable": false
+    },
+    {
+      "path": "visual/definition.json",
+      "executable": false
+    },
+    {
+      "path": "visual/examples/connected.json",
+      "executable": false
+    },
+    {
+      "path": "visual/output/connected.png",
+      "executable": false
+    },
+    {
+      "path": "visual/output/connected.svg",
+      "executable": false
+    },
+    {
+      "path": "visual/output/description.md",
+      "executable": false
+    }
+  ],
+  "artefacts": [
+    {
+      "source": "implementation/desktop/scripts/build.cjs",
+      "destination": "components/windows-desktop/desktop/scripts/build.cjs",
+      "template": false,
+      "executable": false
+    },
+    {
+      "source": "implementation/desktop/src/main.cjs",
+      "destination": "components/windows-desktop/desktop/src/main.cjs",
+      "template": false,
+      "executable": false
+    },
+    {
+      "source": "implementation/desktop/src/policy.cjs",
+      "destination": "components/windows-desktop/desktop/src/policy.cjs",
+      "template": false,
+      "executable": false
+    },
+    {
+      "source": "implementation/desktop/src/shell.cjs",
+      "destination": "components/windows-desktop/desktop/src/shell.cjs",
+      "template": false,
+      "executable": false
+    },
+    {
+      "source": "implementation/verification/desktop.cjs",
+      "destination": "components/windows-desktop/verification/desktop.cjs",
+      "template": false,
+      "executable": false
+    }
+  ],
+  "dependencies": [],
+  "provides": [
+    {
+      "id": "facility",
+      "type": "ae/desktop-host",
+      "version": "1.0.0",
+      "path": "interfaces/contract.json"
+    }
+  ],
+  "requires": [
+    {
+      "id": "configuration",
+      "type": "ae/windows-desktop-configuration",
+      "version": "1.0.0",
+      "path": "interfaces/required/configuration.json",
+      "optional": true
+    }
+  ],
+  "visual": {
+    "definition": "visual/definition.json",
+    "examples": [
+      "visual/examples/connected.json"
+    ],
+    "outputs": [
+      "visual/output/connected.svg",
+      "visual/output/connected.png"
+    ],
+    "descriptions": [
+      "visual/output/description.md"
+    ]
+  },
+  "capabilities": {
+    "hosts": [],
+    "secrets": [],
+    "writes": [
+      "components/windows-desktop/desktop/scripts/build.cjs",
+      "components/windows-desktop/desktop/src/main.cjs",
+      "components/windows-desktop/desktop/src/policy.cjs",
+      "components/windows-desktop/desktop/src/shell.cjs",
+      "components/windows-desktop/verification/desktop.cjs"
+    ]
+  },
+  "infrastructure": {
+    "accounts": [],
+    "costStatus": "unmeasured",
+    "deployedReason": "Local library; no service deployment"
+  },
+  "verification": [
+    {
+      "id": "behaviour",
+      "root": "package",
+      "argv": [
+        "node",
+        "--test",
+        "tests/policy.test.cjs",
+        "tests/result.test.cjs",
+        "tests/runtime.test.cjs",
+        "tests/package-staging.test.cjs"
+      ],
+      "cwd": ".",
+      "prepare": [],
+      "tools": {
+        "node": "26.5.0",
+        "npm": "11.17.0"
+      },
+      "fixtures": [
+        "tests/fixtures/index.html"
+      ],
+      "locks": [
+        "package-lock.json"
+      ],
+      "network": false,
+      "timeoutSeconds": 120,
+      "expectedExit": 0,
+      "scope": "required-local",
+      "requirements": [],
+      "execution": {
+        "kind": "local",
+        "simulation": false,
+        "operations": [],
+        "settings": [],
+        "secrets": [],
+        "resources": [],
+        "assertions": [],
+        "cleanup": null
+      }
+    },
+    {
+      "id": "windows-package",
+      "root": "package",
+      "argv": [
+        "node",
+        "scripts/platform-check.cjs",
+        "package"
+      ],
+      "cwd": ".",
+      "prepare": [
+        {
+          "argv": [
+            "npm",
+            "ci",
+            "--prefix",
+            "examples/desktop",
+            "--ignore-scripts",
+            "--no-audit",
+            "--no-fund"
+          ],
+          "cwd": ".",
+          "network": true
+        },
+        {
+          "argv": [
+            "node",
+            "examples/desktop/node_modules/electron/install.js"
+          ],
+          "cwd": ".",
+          "network": true
+        }
+      ],
+      "tools": {
+        "node": "26.5.0",
+        "npm": "11.17.0"
+      },
+      "fixtures": [
+        "examples/desktop/web/index.html",
+        "examples/desktop/main.cjs"
+      ],
+      "locks": [
+        "examples/desktop/package-lock.json"
+      ],
+      "network": true,
+      "timeoutSeconds": 300,
+      "expectedExit": 0,
+      "scope": "platform",
+      "requirements": [],
+      "execution": {
+        "kind": "native",
+        "simulation": false,
+        "operations": [
+          "dependency-download",
+          "windows-package"
+        ],
+        "settings": [
+          "maximumSeconds"
+        ],
+        "secrets": [],
+        "resources": [],
+        "assertions": [
+          "component-present",
+          "entrypoint-present",
+          "executable-architecture",
+          "relocated-web",
+          "script-integrity"
+        ],
+        "cleanup": null
+      }
+    },
+    {
+      "id": "windows-runtime",
+      "root": "package",
+      "argv": [
+        "node",
+        "scripts/platform-check.cjs",
+        "runtime"
+      ],
+      "cwd": ".",
+      "prepare": [
+        {
+          "argv": [
+            "npm",
+            "ci",
+            "--prefix",
+            "examples/desktop",
+            "--ignore-scripts",
+            "--no-audit",
+            "--no-fund"
+          ],
+          "cwd": ".",
+          "network": true
+        },
+        {
+          "argv": [
+            "node",
+            "examples/desktop/node_modules/electron/install.js"
+          ],
+          "cwd": ".",
+          "network": true
+        },
+        {
+          "argv": [
+            "node",
+            "scripts/package-consumer.cjs"
+          ],
+          "cwd": ".",
+          "network": true
+        }
+      ],
+      "tools": {
+        "node": "26.5.0",
+        "npm": "11.17.0"
+      },
+      "fixtures": [
+        "examples/desktop/web/index.html",
+        "examples/desktop/main.cjs"
+      ],
+      "locks": [
+        "examples/desktop/package-lock.json"
+      ],
+      "network": false,
+      "timeoutSeconds": 300,
+      "expectedExit": 0,
+      "scope": "platform",
+      "requirements": [
+        "external:windows-host"
+      ],
+      "execution": {
+        "kind": "native",
+        "simulation": false,
+        "operations": [
+          "dependency-download",
+          "windows-execute",
+          "windows-package"
+        ],
+        "settings": [
+          "maximumSeconds",
+          "windowsArchitecture"
+        ],
+        "secrets": [],
+        "resources": [],
+        "assertions": [
+          "assets-loaded",
+          "board-capture-denied",
+          "component-present",
+          "entrypoint-present",
+          "executable-architecture",
+          "mode-transition",
+          "navigation-denied",
+          "process-tree-terminated",
+          "relocated-web",
+          "script-integrity",
+          "window-live"
+        ],
+        "cleanup": null
+      }
+    }
+  ],
+  "upgrade": {
+    "policy": "patch",
+    "migration": "files-only"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "format": 1,
+  "jobs": ["windows-desktop"],
+  "profiles": [
+    { "id": "any", "load": {}, "cost": "none", "regions": ["any"], "compliance": [] }
+  ],
+  "notes": "Local Electron host library; runs on the end user's Windows machine. No hosted service, account or measured load. Windows runtime is unverified."
+}

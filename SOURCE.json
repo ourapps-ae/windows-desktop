@@ -1,0 +1,30 @@
+{
+  "revision": "19905b75dbea89fbfd424d67fe26c81aaed0e018",
+  "files": [
+    {
+      "path": "desktop/src/main.cjs",
+      "sha256": "3a69241a92c3c7d8c759834b5fdcd6eee58e11157a116b9bc3cde64fd3470993"
+    },
+    {
+      "path": "desktop/src/shell.cjs",
+      "sha256": "1c444e9577c05877f5873365f45aee9dedad48fc1be454d5781811c3b2408bb7"
+    },
+    {
+      "path": "desktop/src/policy.cjs",
+      "sha256": "091b7167439edde35da5d24d37c3d55c61a7b0e799fce6ad86b2633d91dbc516"
+    },
+    {
+      "path": "desktop/scripts/build.cjs",
+      "sha256": "8aeec025869930b0b0fa640710d38d6e1264d462127c1313570a6ea6c159de14"
+    },
+    {
+      "path": "desktop/test/policy.test.cjs",
+      "sha256": "b79a124e4aa7c5a305777aead14750867a5aa480888de8c355f28fd9b1aad016"
+    },
+    {
+      "path": "desktop/test/permissions.test.cjs",
+      "sha256": "db972e63f757ca312017c4fac095716f13f72122502cec8f46a9295ddea8c208"
+    }
+  ],
+  "changes": "Application identities and imports replaced with configuration/callbacks; generic platform helpers extracted; tests use neutral fixtures."
+}

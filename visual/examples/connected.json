@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "id": "windows-desktop-connected",
+  "title": "Windows desktop connected example",
+  "status": "example",
+  "view": "component",
+  "focus": "component",
+  "definitions": [
+    {
+      "id": "ourapps-ae.windows-desktop",
+      "name": "Windows desktop",
+      "kind": "component",
+      "status": "example",
+      "package": "ourapps-ae/windows-desktop",
+      "version": "0.4.0",
+      "ports": [
+        {
+          "id": "configuration",
+          "name": "Host configuration",
+          "direction": "input",
+          "kind": "interface",
+          "type": "ae/windows-desktop-configuration",
+          "version": "1.0.0",
+          "required": false,
+          "cardinality": "one"
+        },
+        {
+          "id": "facility",
+          "name": "Windows desktop",
+          "direction": "output",
+          "kind": "interface",
+          "type": "ae/desktop-host",
+          "version": "1.0.0"
+        }
+      ],
+      "settings": []
+    },
+    {
+      "id": "configuration",
+      "name": "Example configuration",
+      "kind": "application",
+      "status": "example",
+      "revision": "0.1.0",
+      "ports": [
+        {
+          "id": "configuration",
+          "name": "Host configuration",
+          "direction": "output",
+          "kind": "interface",
+          "type": "ae/windows-desktop-configuration",
+          "version": "1.0.0"
+        }
+      ],
+      "settings": []
+    },
+    {
+      "id": "consumer",
+      "name": "Example consumer",
+      "kind": "application",
+      "status": "example",
+      "revision": "0.1.0",
+      "ports": [
+        {
+          "id": "facility",
+          "name": "Windows desktop",
+          "direction": "input",
+          "kind": "interface",
+          "type": "ae/desktop-host",
+          "version": "1.0.0",
+          "required": true,
+          "cardinality": "one"
+        }
+      ],
+      "settings": []
+    }
+  ],
+  "instances": [
+    {
+      "id": "component",
+      "name": "Windows desktop",
+      "definition": "ourapps-ae.windows-desktop",
+      "configuration": {}
+    },
+    {
+      "id": "configuration",
+      "name": "Example configuration",
+      "definition": "configuration",
+      "configuration": {}
+    },
+    {
+      "id": "consumer",
+      "name": "Example consumer",
+      "definition": "consumer",
+      "configuration": {}
+    }
+  ],
+  "connections": [
+    {
+      "source": {
+        "instance": "configuration",
+        "port": "configuration"
+      },
+      "target": {
+        "instance": "component",
+        "port": "configuration"
+      }
+    },
+    {
+      "source": {
+        "instance": "component",
+        "port": "facility"
+      },
+      "target": {
+        "instance": "consumer",
+        "port": "facility"
+      }
+    }
+  ]
+}
