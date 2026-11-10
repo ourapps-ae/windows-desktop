@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ae/windows-desktop-configuration",
+  "x-version": "1.0.0",
+  "description": "The application's settings for windows-desktop: the DesktopSettings passed to start and the paths passed to build.",
+  "type": "object",
+  "properties": {
+    "webRoot": {
+      "type": "string",
+      "description": "The packaged web build (resources/web) the window serves; for build, the generated web project that holds the build:desktop script. Absolute path on the running platform.",
+      "pattern": "^(/|\\\\|[A-Za-z]:[\\\\/])"
+    },
+    "scheme": {
+      "type": "string",
+      "description": "Lower-case custom scheme the window loads from; not http, https, file, data or javascript.",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "not": {
+        "enum": [
+          "http",
+          "https",
+          "file",
+          "data",
+          "javascript"
+        ]
+      }
+    },
+    "appName": {
+      "type": "string",
+      "description": "Application and window title.",
+      "minLength": 1
+    },
+    "partition": {
+      "type": "string",
+      "description": "Browser session partition name.",
+      "minLength": 1
+    },
+    "modeEvent": {
+      "type": "string",
+      "description": "Window event name that display-mode fires when document.documentElement.dataset.mode changes.",
+      "minLength": 1
+    },
+    "serverOrigin": {
+      "type": "string",
+      "description": "Exact origin of the server (no path, no credentials, no trailing slash); https, or http only for localhost, 127.0.0.1 or [::1].",
+      "pattern": "^https://([a-z0-9.-]+|\\[[0-9a-f:.]+\\])(:[0-9]{1,5})?$|^http://(localhost|127\\.0\\.0\\.1|\\[::1\\])(:[0-9]{1,5})?$"
+    },
+    "externalOrigins": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "https origin with no path or credentials.",
+        "pattern": "^https://([a-z0-9.-]+|\\[[0-9a-f:.]+\\])(:[0-9]{1,5})?$"
+      },
+      "description": "Origins the window may open in the system browser after a recent user action."
+    },
+    "outputRoot": {
+      "type": "string",
+      "description": "Where build writes the desktop web build (desktop/build/web); must not overlap webRoot or webRoot/dist-desktop. Absolute path on the running platform.",
+      "pattern": "^(/|\\\\|[A-Za-z]:[\\\\/])"
+    }
+  },
+  "required": [
+    "webRoot",
+    "outputRoot",
+    "scheme",
+    "appName",
+    "partition",
+    "modeEvent",
+    "serverOrigin",
+    "externalOrigins"
+  ],
+  "additionalProperties": false
+}

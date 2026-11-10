@@ -1,83 +1,1100 @@
 {
-  "id": "facility",
-  "type": "ae/desktop-host",
-  "version": "1.0.0",
-  "operations": {
-    "start": {
-      "arguments": [
-        "settings:DesktopSettings"
-      ],
-      "returns": "Promise<BrowserWindow>"
-    },
-    "build": {
-      "arguments": [
-        "settings:{webRoot:string,outputRoot:string}"
-      ],
-      "returns": "Promise<void>"
-    },
-    "createPolicy": {
-      "arguments": [
-        "settings:DesktopSettings"
-      ],
-      "returns": "Policy"
-    },
-    "createShell": {
-      "arguments": [
-        "settings:DesktopSettings",
-        "electron:typeof import('electron')",
-        "policy:Policy"
-      ],
-      "returns": "Shell"
-    },
-    "verifyWindow": {
-      "arguments": [
-        "win:Electron.BrowserWindow",
-        "callbacks:{entry:string,enterDisplay:()=>Promise<unknown>,enterPlayer:()=>Promise<unknown>,rendered:()=>Promise<boolean>}"
-      ],
-      "returns": "Promise<Record<string,boolean>>"
-    },
-    "writeResult": {
-      "arguments": [
-        "context:SanitizedExecutionContext",
-        "observed:Record<string,boolean>"
-      ],
-      "returns": "Promise<HelperResult>"
-    },
-    "profilePath": {
-      "arguments": [
-        "contextFile:string"
-      ],
-      "returns": "string"
+  "openrpc": "1.3.2",
+  "info": {
+    "title": "ae/desktop-host",
+    "version": "1.0.0",
+    "description": "Configured Electron host with local assets and capture and navigation policies (CommonJS modules desktop/src/main.cjs, policy.cjs, shell.cjs, desktop/scripts/build.cjs and verification/desktop.cjs). Call start once before Electron is ready so the scheme and sandbox are registered, with an absolute packaged webRoot. Display mode is read from document.documentElement.dataset.mode and modeEvent refreshes the page marker; only an interacted player main frame may capture; leaving the player page invalidates pending permission checks; closing every window quits the application.",
+    "license": {
+      "name": "Apache-2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0"
     }
   },
-  "exports": {
-    "verification/desktop.cjs": [
-      "verifyWindow(win:Electron.BrowserWindow,callbacks:{entry:string,enterDisplay:()=>Promise<unknown>,enterPlayer:()=>Promise<unknown>,rendered:()=>Promise<boolean>}):Promise<Record<string,boolean>>",
-      "writeResult(context:SanitizedExecutionContext,observed:Record<string,boolean>):Promise<HelperResult>",
-      "profilePath(contextFile:string):string"
-    ],
-    "desktop/src/main.cjs": [
-      "DesktopSettings={scheme:string,appName:string,partition:string,serverOrigin:string,webRoot:string,modeEvent:string,externalOrigins:string[]}; start(settings:DesktopSettings):Promise<BrowserWindow>"
-    ],
-    "desktop/src/policy.cjs": [
-      "createPolicy(settings:DesktopSettings):{ORIGIN:string,ENTRY:string,SCHEME:Electron.CustomScheme,trustedURL:(value:string)=>boolean,trustedPage:(value:string)=>boolean,playerPage:(value:string)=>boolean,externalURL:(value:string)=>boolean,assetPath:(root:string,value:string)=>Promise<string|null>,assetResponse:(root:string,request:{url:string,method:string})=>Promise<Response>,mediaAllowed:(request:{page:string,origin:string,permission:string,interacted:boolean,mainFrame:boolean,mediaTypes:string[]})=>boolean}"
-    ],
-    "desktop/src/shell.cjs": [
-      "preferences",
-      "createShell(settings:DesktopSettings,electron:typeof import('electron'),policy:ReturnType<typeof createPolicy>):{preferences:Electron.WebPreferences,installPermissions:(session:Electron.Session,state:ShellState)=>void,createWindow:(session:Electron.Session,state:ShellState,options?:{show?:boolean,icon?:string})=>Electron.BrowserWindow,configureSession:(session:Electron.Session,root:string,state:ShellState)=>void,ENTRY:string}; ShellState={window:Electron.BrowserWindow|null,interacted:boolean,generation?:number,modeReady?:Promise<unknown>}"
-    ],
-    "desktop/scripts/build.cjs": [
-      "build(settings:{webRoot:string,outputRoot:string}):Promise<void>"
-    ]
-  },
-  "requirements": {
-    "configuration": "Supply absolute webRoot and outputRoot, a lowercase custom scheme, appName, partition, modeEvent, exact serverOrigin and externalOrigins. Server origin must be secure except explicit loopback. External origins must use secure transport and contain no path or credentials."
-  },
-  "buildInputs": "Policy/build checks use Node 26.5.0 and npm 11.17.0. Standalone examples/desktop/package-lock.json locks Electron 45.0.0, electron-builder 26.15.3 and archive inspection. scripts/package-consumer.cjs consumes the production web builder and desktop sources; check-package.cjs verifies unsigned executables, packaged bytes and resources. Windows runtime remains unverified.",
-  "configurationPort": {
-    "id": "configuration",
-    "type": "ae/windows-desktop-configuration",
-    "version": "1.0.0"
-  },
-  "lifecycle": "Call start once before Electron is ready so the scheme and sandbox are registered. Supply an absolute packaged webRoot. Display mode is read from document.documentElement.dataset.mode; the supplied modeEvent refreshes the page marker. Only an interacted player main frame may capture. Board navigation invalidates pending permission generations; all windows closing quits the application."
+  "methods": [
+    {
+      "name": "start",
+      "description": "Registers the scheme, enables the sandbox, waits for Electron, configures the session, opens the window on ENTRY and resolves to it once the mode marker has run.",
+      "params": [
+        {
+          "name": "settings",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/DesktopSettings"
+          }
+        }
+      ],
+      "result": {
+        "name": "window",
+        "schema": {
+          "description": "Electron BrowserWindow."
+        }
+      },
+      "errors": [
+        {
+          "$ref": "#/components/errors/InvalidSettings"
+        }
+      ],
+      "tags": [
+        {
+          "name": "javascript"
+        }
+      ]
+    },
+    {
+      "name": "build",
+      "description": "Runs npm run build:desktop in webRoot with VITE_DESKTOP=1, refuses an entry page that loads remote scripts or the install banner, and replaces outputRoot with webRoot/dist-desktop.",
+      "params": [
+        {
+          "name": "settings",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/BuildSettings"
+          }
+        }
+      ],
+      "result": {
+        "name": "none",
+        "description": "Returns nothing.",
+        "schema": {
+          "type": "null"
+        }
+      },
+      "errors": [
+        {
+          "$ref": "#/components/errors/BuildFailed"
+        }
+      ],
+      "tags": [
+        {
+          "name": "javascript"
+        }
+      ]
+    },
+    {
+      "name": "createPolicy",
+      "description": "Checks the settings and returns the policy functions for the scheme and origins.",
+      "params": [
+        {
+          "name": "settings",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/DesktopSettings"
+          }
+        }
+      ],
+      "result": {
+        "name": "policy",
+        "schema": {
+          "$ref": "#/components/schemas/Policy"
+        }
+      },
+      "errors": [
+        {
+          "$ref": "#/components/errors/InvalidSettings"
+        }
+      ],
+      "tags": [
+        {
+          "name": "javascript"
+        }
+      ]
+    },
+    {
+      "name": "Policy.trustedURL",
+      "description": "True for <scheme>://app addresses with no port or credentials.",
+      "params": [
+        {
+          "name": "value",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "trusted",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      "tags": [
+        {
+          "name": "javascript"
+        }
+      ]
+    },
+    {
+      "name": "Policy.trustedPage",
+      "description": "True for the trusted entry page (path empty, / or /index.html, no query).",
+      "params": [
+        {
+          "name": "value",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "trusted",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      "tags": [
+        {
+          "name": "javascript"
+        }
+      ]
+    },
+    {
+      "name": "Policy.playerPage",
+      "description": "True for the trusted entry page with hash #player.",
+      "params": [
+        {
+          "name": "value",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "player",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      "tags": [
+        {
+          "name": "javascript"
+        }
+      ]
+    },
+    {
+      "name": "Policy.externalURL",
+      "description": "True for https addresses on one of externalOrigins with no credentials.",
+      "params": [
+        {
+          "name": "value",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "external",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      "tags": [
+        {
+          "name": "javascript"
+        }
+      ]
+    },
+    {
+      "name": "Policy.assetPath",
+      "description": "The real file under root that a trusted address names, or null for untrusted, encoded-separator, dot-segment, missing or escaping paths.",
+      "params": [
+        {
+          "name": "root",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "value",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "path",
+        "schema": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "tags": [
+        {
+          "name": "javascript"
+        }
+      ]
+    },
+    {
+      "name": "Policy.assetResponse",
+      "description": "A Fetch Response for the asset with content-security, no-sniff, permissions and no-store headers: 405 for methods other than GET and HEAD, 404 when assetPath is null.",
+      "params": [
+        {
+          "name": "root",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "request",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/AssetRequest"
+          }
+        }
+      ],
+      "result": {
+        "name": "response",
+        "schema": {
+          "description": "Fetch API Response."
+        }
+      },
+      "tags": [
+        {
+          "name": "javascript"
+        }
+      ]
+    },
+    {
+      "name": "Policy.mediaAllowed",
+      "description": "True only for permission media from the trusted player page's main frame after interaction, asking for audio or video only.",
+      "params": [
+        {
+          "name": "request",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/MediaRequest"
+          }
+        }
+      ],
+      "result": {
+        "name": "allowed",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      "tags": [
+        {
+          "name": "javascript"
+        }
+      ]
+    },
+    {
+      "name": "createShell",
+      "description": "Returns the window, session and permission functions for the settings and policy.",
+      "params": [
+        {
+          "name": "settings",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/DesktopSettings"
+          }
+        },
+        {
+          "name": "electron",
+          "required": true,
+          "schema": {
+            "description": "The electron module."
+          }
+        },
+        {
+          "name": "policy",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Policy"
+          }
+        }
+      ],
+      "result": {
+        "name": "shell",
+        "schema": {
+          "$ref": "#/components/schemas/Shell"
+        }
+      },
+      "tags": [
+        {
+          "name": "javascript"
+        }
+      ]
+    },
+    {
+      "name": "Shell.installPermissions",
+      "description": "Installs permission check, request and display-media handlers that apply Policy.mediaAllowed to the current window, re-checking mode and generation before granting; blocks downloads.",
+      "params": [
+        {
+          "name": "session",
+          "required": true,
+          "schema": {
+            "description": "Electron Session."
+          }
+        },
+        {
+          "name": "state",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ShellState"
+          }
+        }
+      ],
+      "result": {
+        "name": "none",
+        "description": "Returns nothing.",
+        "schema": {
+          "type": "null"
+        }
+      },
+      "tags": [
+        {
+          "name": "javascript"
+        }
+      ]
+    },
+    {
+      "name": "Shell.createWindow",
+      "description": "Opens a sandboxed window, tracks interaction, denies navigation away from the trusted page and new windows, opens allowed external addresses in the system browser, and publishes the display mode as the page hash.",
+      "params": [
+        {
+          "name": "session",
+          "required": true,
+          "schema": {
+            "description": "Electron Session."
+          }
+        },
+        {
+          "name": "state",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ShellState"
+          }
+        },
+        {
+          "name": "options",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/WindowOptions"
+          }
+        }
+      ],
+      "result": {
+        "name": "window",
+        "schema": {
+          "description": "Electron BrowserWindow."
+        }
+      },
+      "tags": [
+        {
+          "name": "javascript"
+        }
+      ]
+    },
+    {
+      "name": "Shell.configureSession",
+      "description": "Serves the scheme from root through Policy.assetResponse and installs the permission handlers.",
+      "params": [
+        {
+          "name": "session",
+          "required": true,
+          "schema": {
+            "description": "Electron Session."
+          }
+        },
+        {
+          "name": "root",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "state",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ShellState"
+          }
+        }
+      ],
+      "result": {
+        "name": "none",
+        "description": "Returns nothing.",
+        "schema": {
+          "type": "null"
+        }
+      },
+      "tags": [
+        {
+          "name": "javascript"
+        }
+      ]
+    },
+    {
+      "name": "verifyWindow",
+      "description": "Runs the real-window checks (window live, assets loaded, navigation denied, capture only in player mode, mode transitions) and returns what was observed. Needs Electron started with use-fake-device-for-media-stream and without use-fake-ui-for-media-stream.",
+      "params": [
+        {
+          "name": "window",
+          "required": true,
+          "schema": {
+            "description": "Electron BrowserWindow."
+          }
+        },
+        {
+          "name": "callbacks",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/VerificationCallbacks"
+          }
+        }
+      ],
+      "result": {
+        "name": "observed",
+        "schema": {
+          "$ref": "#/components/schemas/Observed"
+        }
+      },
+      "errors": [
+        {
+          "$ref": "#/components/errors/VerificationFailed"
+        }
+      ],
+      "tags": [
+        {
+          "name": "javascript"
+        }
+      ]
+    },
+    {
+      "name": "writeResult",
+      "description": "Writes the helper result for the context's assertions atomically to AEPM_RESULT_FILE and returns it.",
+      "params": [
+        {
+          "name": "context",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ExecutionContext"
+          }
+        },
+        {
+          "name": "observed",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "boolean"
+            },
+            "description": "Assertion id to whether it held."
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/HelperResult"
+        }
+      },
+      "errors": [
+        {
+          "$ref": "#/components/errors/VerificationFailed"
+        }
+      ],
+      "tags": [
+        {
+          "name": "javascript"
+        }
+      ]
+    },
+    {
+      "name": "profilePath",
+      "description": "The browser profile folder for a run: profiles/desktop beside the context file.",
+      "params": [
+        {
+          "name": "contextFile",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "path",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "tags": [
+        {
+          "name": "javascript"
+        }
+      ]
+    }
+  ],
+  "components": {
+    "schemas": {
+      "DesktopSettings": {
+        "type": "object",
+        "properties": {
+          "webRoot": {
+            "type": "string",
+            "description": "The packaged web build (resources/web) the window serves; for build, the generated web project that holds the build:desktop script. Absolute path on the running platform.",
+            "pattern": "^(/|\\\\|[A-Za-z]:[\\\\/])"
+          },
+          "scheme": {
+            "type": "string",
+            "description": "Lower-case custom scheme the window loads from; not http, https, file, data or javascript.",
+            "pattern": "^[a-z][a-z0-9-]*$",
+            "not": {
+              "enum": [
+                "http",
+                "https",
+                "file",
+                "data",
+                "javascript"
+              ]
+            }
+          },
+          "appName": {
+            "type": "string",
+            "description": "Application and window title.",
+            "minLength": 1
+          },
+          "partition": {
+            "type": "string",
+            "description": "Browser session partition name.",
+            "minLength": 1
+          },
+          "modeEvent": {
+            "type": "string",
+            "description": "Window event name that display-mode fires when document.documentElement.dataset.mode changes.",
+            "minLength": 1
+          },
+          "serverOrigin": {
+            "type": "string",
+            "description": "Exact origin of the server (no path, no credentials, no trailing slash); https, or http only for localhost, 127.0.0.1 or [::1].",
+            "pattern": "^https://([a-z0-9.-]+|\\[[0-9a-f:.]+\\])(:[0-9]{1,5})?$|^http://(localhost|127\\.0\\.0\\.1|\\[::1\\])(:[0-9]{1,5})?$"
+          },
+          "externalOrigins": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "https origin with no path or credentials.",
+              "pattern": "^https://([a-z0-9.-]+|\\[[0-9a-f:.]+\\])(:[0-9]{1,5})?$"
+            },
+            "description": "Origins the window may open in the system browser after a recent user action."
+          }
+        },
+        "required": [
+          "webRoot",
+          "scheme",
+          "appName",
+          "partition",
+          "modeEvent",
+          "serverOrigin",
+          "externalOrigins"
+        ],
+        "additionalProperties": false,
+        "description": "Settings of start, createPolicy and createShell."
+      },
+      "BuildSettings": {
+        "type": "object",
+        "properties": {
+          "webRoot": {
+            "type": "string",
+            "description": "The generated web project holding the build:desktop script. Absolute path on the running platform.",
+            "pattern": "^(/|\\\\|[A-Za-z]:[\\\\/])"
+          },
+          "outputRoot": {
+            "type": "string",
+            "description": "Where the desktop web build is copied; must not overlap webRoot or webRoot/dist-desktop. Absolute path on the running platform.",
+            "pattern": "^(/|\\\\|[A-Za-z]:[\\\\/])"
+          }
+        },
+        "required": [
+          "webRoot",
+          "outputRoot"
+        ],
+        "additionalProperties": false
+      },
+      "CustomScheme": {
+        "type": "object",
+        "properties": {
+          "scheme": {
+            "type": "string"
+          },
+          "privileges": {
+            "type": "object",
+            "properties": {
+              "standard": {
+                "const": true
+              },
+              "secure": {
+                "const": true
+              },
+              "supportFetchAPI": {
+                "const": true
+              },
+              "corsEnabled": {
+                "const": true
+              },
+              "stream": {
+                "const": true
+              }
+            },
+            "required": [
+              "standard",
+              "secure",
+              "supportFetchAPI",
+              "corsEnabled",
+              "stream"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "scheme",
+          "privileges"
+        ],
+        "additionalProperties": false,
+        "description": "Electron CustomScheme registered as privileged."
+      },
+      "MediaRequest": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "string",
+            "description": "Address of the page asking."
+          },
+          "origin": {
+            "type": "string",
+            "description": "Origin of the requester."
+          },
+          "permission": {
+            "type": "string",
+            "description": "Electron permission name."
+          },
+          "interacted": {
+            "type": "boolean",
+            "description": "The user has pressed a key or the mouse on the trusted page in this window."
+          },
+          "mainFrame": {
+            "type": "boolean"
+          },
+          "mediaTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "page",
+          "origin",
+          "permission",
+          "interacted",
+          "mainFrame",
+          "mediaTypes"
+        ],
+        "additionalProperties": false
+      },
+      "AssetRequest": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "method": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url",
+          "method"
+        ],
+        "additionalProperties": false
+      },
+      "Policy": {
+        "type": "object",
+        "description": "Result of createPolicy: the origin, entry and scheme, and the policy functions listed as Policy.* methods.",
+        "required": [
+          "ORIGIN",
+          "ENTRY",
+          "SCHEME",
+          "trustedURL",
+          "trustedPage",
+          "playerPage",
+          "externalURL",
+          "assetPath",
+          "assetResponse",
+          "mediaAllowed"
+        ],
+        "properties": {
+          "ORIGIN": {
+            "type": "string",
+            "description": "<scheme>://app"
+          },
+          "ENTRY": {
+            "type": "string",
+            "description": "<scheme>://app/index.html"
+          },
+          "SCHEME": {
+            "$ref": "#/components/schemas/CustomScheme"
+          },
+          "trustedURL": {
+            "description": "Function (value: string) => boolean."
+          },
+          "trustedPage": {
+            "description": "Function (value: string) => boolean."
+          },
+          "playerPage": {
+            "description": "Function (value: string) => boolean."
+          },
+          "externalURL": {
+            "description": "Function (value: string) => boolean."
+          },
+          "assetPath": {
+            "description": "Function (root: string, value: string) => Promise<string | null>."
+          },
+          "assetResponse": {
+            "description": "Function (root: string, request: AssetRequest) => Promise<Response>."
+          },
+          "mediaAllowed": {
+            "description": "Function (request: MediaRequest) => boolean."
+          }
+        },
+        "additionalProperties": false
+      },
+      "ShellState": {
+        "type": "object",
+        "description": "Mutable window state shared by the shell functions.",
+        "required": [
+          "window",
+          "interacted"
+        ],
+        "properties": {
+          "window": {
+            "anyOf": [
+              {
+                "description": "Electron BrowserWindow."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "interacted": {
+            "type": "boolean"
+          },
+          "generation": {
+            "type": "integer",
+            "description": "Increases on every main-frame navigation; pending permission checks from an older generation are refused.",
+            "minimum": 0
+          },
+          "modeReady": {
+            "description": "Promise that settles when the mode marker script has run on the loaded page."
+          }
+        }
+      },
+      "WindowOptions": {
+        "type": "object",
+        "properties": {
+          "show": {
+            "type": "boolean",
+            "description": "Defaults to true."
+          },
+          "icon": {
+            "type": "string",
+            "description": "Window icon path."
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "Shell": {
+        "type": "object",
+        "description": "Result of createShell; the functions are listed as Shell.* methods.",
+        "required": [
+          "preferences",
+          "installPermissions",
+          "createWindow",
+          "configureSession",
+          "ENTRY"
+        ],
+        "properties": {
+          "preferences": {
+            "$ref": "#/components/schemas/WebPreferences"
+          },
+          "installPermissions": {
+            "description": "Function (session, state: ShellState) => void."
+          },
+          "createWindow": {
+            "description": "Function (session, state: ShellState, options?: WindowOptions) => BrowserWindow."
+          },
+          "configureSession": {
+            "description": "Function (session, root: string, state: ShellState) => void."
+          },
+          "ENTRY": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "WebPreferences": {
+        "type": "object",
+        "properties": {
+          "nodeIntegration": {
+            "const": false
+          },
+          "nodeIntegrationInWorker": {
+            "const": false
+          },
+          "nodeIntegrationInSubFrames": {
+            "const": false
+          },
+          "contextIsolation": {
+            "const": true
+          },
+          "sandbox": {
+            "const": true
+          },
+          "webSecurity": {
+            "const": true
+          },
+          "allowRunningInsecureContent": {
+            "const": false
+          },
+          "webviewTag": {
+            "const": false
+          },
+          "navigateOnDragDrop": {
+            "const": false
+          },
+          "spellcheck": {
+            "const": false
+          }
+        },
+        "required": [
+          "nodeIntegration",
+          "nodeIntegrationInWorker",
+          "nodeIntegrationInSubFrames",
+          "contextIsolation",
+          "sandbox",
+          "webSecurity",
+          "allowRunningInsecureContent",
+          "webviewTag",
+          "navigateOnDragDrop",
+          "spellcheck"
+        ],
+        "additionalProperties": false,
+        "description": "The Electron webPreferences every window uses."
+      },
+      "VerificationCallbacks": {
+        "type": "object",
+        "required": [
+          "entry",
+          "enterDisplay",
+          "enterPlayer",
+          "rendered"
+        ],
+        "properties": {
+          "entry": {
+            "type": "string",
+            "description": "The entry address the window must stay on."
+          },
+          "enterDisplay": {
+            "description": "Function () => Promise<unknown> that switches the page to board mode."
+          },
+          "enterPlayer": {
+            "description": "Function () => Promise<unknown> that switches the page to player mode."
+          },
+          "rendered": {
+            "description": "Function () => Promise<boolean>, true when the application has drawn its first screen."
+          }
+        },
+        "additionalProperties": false
+      },
+      "Observed": {
+        "type": "object",
+        "properties": {
+          "window-live": {
+            "type": "boolean"
+          },
+          "assets-loaded": {
+            "type": "boolean"
+          },
+          "navigation-denied": {
+            "type": "boolean"
+          },
+          "board-capture-denied": {
+            "type": "boolean"
+          },
+          "mode-transition": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "window-live",
+          "assets-loaded",
+          "navigation-denied",
+          "board-capture-denied",
+          "mode-transition"
+        ],
+        "additionalProperties": false,
+        "description": "Assertion id to whether it held."
+      },
+      "ExecutionContext": {
+        "type": "object",
+        "description": "The sanitised execution context aepm hands the helper (the fields read here).",
+        "required": [
+          "runId",
+          "package",
+          "id",
+          "assertions"
+        ],
+        "properties": {
+          "runId": {
+            "type": "string"
+          },
+          "package": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "assertions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Assertion ids the result must report."
+          }
+        }
+      },
+      "HelperResult": {
+        "type": "object",
+        "properties": {
+          "format": {
+            "const": 1
+          },
+          "runId": {
+            "type": "string"
+          },
+          "package": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "assertions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "passed": {
+                  "type": "boolean"
+                },
+                "actual": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "passed",
+                "actual"
+              ],
+              "additionalProperties": false
+            },
+            "description": "Sorted by id; process-tree-terminated is always passed false, actual null, for the parent to settle."
+          },
+          "artifacts": {
+            "type": "array",
+            "items": {},
+            "maxItems": 0
+          },
+          "resources": {
+            "type": "array",
+            "items": {},
+            "maxItems": 0
+          },
+          "cleanup": {
+            "type": "object",
+            "properties": {
+              "required": {
+                "const": true
+              },
+              "attempted": {
+                "const": true
+              },
+              "completed": {
+                "const": false
+              },
+              "reason": {
+                "const": ""
+              }
+            },
+            "required": [
+              "required",
+              "attempted",
+              "completed",
+              "reason"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "format",
+          "runId",
+          "package",
+          "id",
+          "assertions",
+          "artifacts",
+          "resources",
+          "cleanup"
+        ],
+        "additionalProperties": false,
+        "description": "Written in canonical JSON to the file named by AEPM_RESULT_FILE."
+      }
+    },
+    "errors": {
+      "InvalidSettings": {
+        "code": 1,
+        "message": "Invalid desktop settings",
+        "data": {
+          "type": "string",
+          "enum": [
+            "webRoot must be absolute",
+            "Missing desktop settings",
+            "Invalid application scheme",
+            "Invalid server origin",
+            "Insecure server origin",
+            "Invalid external origin"
+          ],
+          "description": "Error message thrown; an origin that is not a URL throws the URL parser's TypeError instead."
+        }
+      },
+      "BuildFailed": {
+        "code": 2,
+        "message": "Desktop web build failed",
+        "data": {
+          "type": "string",
+          "description": "Build paths must be absolute, Build paths overlap, Web desktop build exited <status>, Desktop entry must use bundled scripts only, or the spawn or file system error."
+        }
+      },
+      "VerificationFailed": {
+        "code": 3,
+        "message": "Desktop verification failed",
+        "data": {
+          "type": "string",
+          "description": "An assertion error, timeout, or the file system error writing the result."
+        }
+      }
+    }
+  }
 }
