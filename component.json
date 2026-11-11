@@ -29,6 +29,12 @@
       "executable": false,
       "source": "implementation/verification/desktop.cjs",
       "template": false
+    },
+    {
+      "destination": "components/windows-desktop/verification/result.mjs",
+      "executable": false,
+      "source": "implementation/verification/result.mjs",
+      "template": false
     }
   ],
   "capabilities": {
@@ -39,7 +45,8 @@
       "components/windows-desktop/desktop/src/main.cjs",
       "components/windows-desktop/desktop/src/policy.cjs",
       "components/windows-desktop/desktop/src/shell.cjs",
-      "components/windows-desktop/verification/desktop.cjs"
+      "components/windows-desktop/verification/desktop.cjs",
+      "components/windows-desktop/verification/result.mjs"
     ]
   },
   "collect": [],
@@ -138,6 +145,10 @@
     {
       "executable": false,
       "path": "implementation/verification/desktop.cjs"
+    },
+    {
+      "executable": false,
+      "path": "implementation/verification/result.mjs"
     },
     {
       "executable": false,

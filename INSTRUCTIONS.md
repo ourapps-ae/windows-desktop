@@ -12,7 +12,7 @@ Package `ourapps-ae/windows-desktop` version `0.5.0`. It provides `facility` (ty
 
 ## For the developer
 
-- Install paths: `components/windows-desktop/desktop/src/{main,shell,policy}.cjs`, `components/windows-desktop/desktop/scripts/build.cjs`, `components/windows-desktop/verification/desktop.cjs`.
+- Install paths: `components/windows-desktop/desktop/src/{main,shell,policy}.cjs`, `components/windows-desktop/desktop/scripts/build.cjs`, `components/windows-desktop/verification/desktop.cjs`, `components/windows-desktop/verification/result.mjs` (the aepm verification context and result files, for the application's Windows verification scripts).
 - Build: `build({webRoot, outputRoot})` runs `npm run build:desktop` with `VITE_DESKTOP=1` in your web project and copies `dist-desktop` to `outputRoot`. You own `APP_VERSION` and `VITE_APP_VERSION`.
 - Start: package the output as `resources/web`, ship the `desktop` sources with the application, make Electron resolvable from there, and call `start(settings)` once before Electron is ready.
 - Display mode is read from `document.documentElement.dataset.mode`; publish it and fire `modeEvent` before capture. Unknown modes deny capture.

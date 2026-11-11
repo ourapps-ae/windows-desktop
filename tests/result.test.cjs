@@ -45,3 +45,29 @@ test('desktop result leaves process termination and profile cleanup to the paren
     await fs.rm(directory, { recursive: true, force: true });
   }
 });
+
+test('the verification result writer reads the context and writes canonical results', async () => {
+  const { canonical, readContext, requireOperations, makeResult, writeResult: write } = await import('../implementation/verification/result.mjs');
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'windows-result-'));
+  const saved = { context: process.env.AEPM_CONTEXT_FILE, result: process.env.AEPM_RESULT_FILE };
+  try {
+    const context = { format: 1, runId: 'a'.repeat(64), package: 'b'.repeat(64), id: 'windows-package', operations: ['windows-execute'], assertions: ['packaged'] };
+    process.env.AEPM_CONTEXT_FILE = path.join(directory, 'context.json');
+    process.env.AEPM_RESULT_FILE = path.join(directory, 'result.json');
+    await fs.writeFile(process.env.AEPM_CONTEXT_FILE, JSON.stringify(context));
+    const read = await readContext();
+    assert.deepEqual(read, context);
+    assert.throws(() => requireOperations(read, ['windows-execute', 'provider-create']), /authorization-denied/);
+    await write(makeResult(read, { packaged: true }));
+    const text = await fs.readFile(process.env.AEPM_RESULT_FILE, 'utf8');
+    assert.equal(JSON.parse(text).runId, context.runId);
+    assert.equal(text, canonical(JSON.parse(text)));
+    assert.deepEqual(JSON.parse(text).assertions, [{ id: 'packaged', passed: true, actual: true }]);
+  } finally {
+    process.env.AEPM_CONTEXT_FILE = saved.context ?? '';
+    process.env.AEPM_RESULT_FILE = saved.result ?? '';
+    if (saved.context === undefined) delete process.env.AEPM_CONTEXT_FILE;
+    if (saved.result === undefined) delete process.env.AEPM_RESULT_FILE;
+    await fs.rm(directory, { recursive: true, force: true });
+  }
+});
