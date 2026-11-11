@@ -26,6 +26,6 @@ From the component directory:
 - `npm test` or `node --test tests/policy.test.cjs tests/result.test.cjs tests/runtime.test.cjs tests/package-staging.test.cjs` (required)
 - `node scripts/platform-check.cjs package` (platform suite; installs Electron, needs network)
 - `node scripts/platform-check.cjs runtime` (Windows x64 only)
-- `python3.12 -B tools/check_component.py components/windows-desktop` from the workspace root.
+- `python3 -m aepm review <digest> --store STORE --policy POLICY --trusted --allow-network` checks an archive fetched with `python3 -m aepm fetch ourapps-ae/windows-desktop@VERSION --store STORE --from https://ourapps.app` and runs its suites.
 
 Heavy packaging and runtime checks are not part of the required set; run them only on a prepared machine.
