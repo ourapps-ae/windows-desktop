@@ -1,6 +1,6 @@
 # Windows desktop instructions
 
-Package `ourapps-ae/windows-desktop` version `0.5.1`. It provides `desktop-host` (type `ae/desktop-host`, version 1.0.0) and optionally requires `windows-desktop-configuration` (type `ae/windows-desktop-configuration`, version 1.0.0).
+Package `ourapps-ae/windows-desktop` version `0.6.0`. It provides `desktop-host` (type `ae/desktop-host`, version 1.0.0) and optionally requires `windows-desktop-configuration` (type `ae/windows-desktop-configuration`, version 1.0.0).
 
 ## For the agent
 
