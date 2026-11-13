@@ -1,13 +1,13 @@
 # Windows desktop instructions
 
-Package `ourapps-ae/windows-desktop` version `0.5.1`. It provides `facility` (type `ae/desktop-host`, version 1.0.0) and optionally requires `configuration` (type `ae/windows-desktop-configuration`, version 1.0.0).
+Package `ourapps-ae/windows-desktop` version `0.5.1`. It provides `desktop-host` (type `ae/desktop-host`, version 1.0.0) and optionally requires `windows-desktop-configuration` (type `ae/windows-desktop-configuration`, version 1.0.0).
 
 ## For the agent
 
 - Select this component when the recipe's `devices` answer includes Windows (a desktop application wrapped around the web build).
 - Supply `configuration` from the recipe and the application's own details: absolute `webRoot` and `outputRoot`, a lowercase custom `scheme` (not http, https, file, data or javascript), `appName`, `partition`, `modeEvent` (the same event name `display-mode` uses), exact `serverOrigin` and `externalOrigins`.
 - `serverOrigin` must be https (http only for localhost, 127.0.0.1 or [::1]). Each external origin must be https with no path or credentials.
-- Connect the provided `facility` port to the application's desktop entry point. Select `display-mode` alongside so the mode marker exists before capture.
+- Connect the provided `desktop-host` port to the application's desktop entry point. Select `display-mode` alongside so the mode marker exists before capture.
 - No accounts or keys are needed. Installers, signing and publishing are not part of this component.
 
 ## For the developer

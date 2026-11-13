@@ -69,5 +69,6 @@
     "serverOrigin",
     "externalOrigins"
   ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "x-ourapps-modules": {}
 }

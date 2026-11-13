@@ -12,6 +12,6 @@ Reference revision: `19905b75dbea89fbfd424d67fe26c81aaed0e018` (frozen McInPoker
 
 Tests in `tests/` and `desktop/test/` hashes in `SOURCE.json` (`policy.test.cjs`, `permissions.test.cjs`, frozen `desktop/test/`) were rewritten against neutral fixtures. `examples/desktop/` is an independent packaging consumer with its own lock for Electron 45.0.0 and electron-builder 26.15.3. `scripts/` holds the package and runtime platform checks.
 
-The manifest marks the `configuration` requirement `optional: true` and the visual definition draws it as not required (windows-desktop-configuration is a connector for values the application can also pass in code, so a design may leave it unconnected).
+The manifest marks the `windows-desktop-configuration` requirement `optional: true` and the visual definition draws it as not required (windows-desktop-configuration is a connector for values the application can also pass in code, so a design may leave it unconnected).
 
 `implementation/verification/result.mjs` is a copy of video-calls' `implementation/verification/result.mjs` (the aepm verification context and result protocol), so Windows verification does not depend on video-calls.

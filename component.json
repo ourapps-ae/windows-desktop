@@ -1,6 +1,12 @@
 {
   "artefacts": [
     {
+      "destination": "components/windows-desktop/desktop/index.cjs",
+      "executable": false,
+      "source": "implementation/desktop/index.cjs",
+      "template": false
+    },
+    {
       "destination": "components/windows-desktop/desktop/scripts/build.cjs",
       "executable": false,
       "source": "implementation/desktop/scripts/build.cjs",
@@ -41,6 +47,7 @@
     "hosts": [],
     "secrets": [],
     "writes": [
+      "components/windows-desktop/desktop/index.cjs",
       "components/windows-desktop/desktop/scripts/build.cjs",
       "components/windows-desktop/desktop/src/main.cjs",
       "components/windows-desktop/desktop/src/policy.cjs",
@@ -57,8 +64,8 @@
       "examples/consumer.cjs"
     ],
     "interfaces": [
-      "interfaces/contract.json",
-      "interfaces/required-configuration.json",
+      "interfaces/desktop-host.json",
+      "interfaces/required-windows-desktop-configuration.json",
       "suitability.json"
     ],
     "licenceNotice": "LICENCE"
@@ -128,6 +135,10 @@
     },
     {
       "executable": false,
+      "path": "implementation/desktop/index.cjs"
+    },
+    {
+      "executable": false,
       "path": "implementation/desktop/scripts/build.cjs"
     },
     {
@@ -152,11 +163,11 @@
     },
     {
       "executable": false,
-      "path": "interfaces/contract.json"
+      "path": "interfaces/desktop-host.json"
     },
     {
       "executable": false,
-      "path": "interfaces/required-configuration.json"
+      "path": "interfaces/required-windows-desktop-configuration.json"
     },
     {
       "executable": false,
@@ -247,17 +258,17 @@
   "kind": "component",
   "provides": [
     {
-      "id": "facility",
-      "path": "interfaces/contract.json",
+      "id": "desktop-host",
+      "path": "interfaces/desktop-host.json",
       "type": "ae/desktop-host",
       "version": "1.0.0"
     }
   ],
   "requires": [
     {
-      "id": "configuration",
+      "id": "windows-desktop-configuration",
       "optional": true,
-      "path": "interfaces/required-configuration.json",
+      "path": "interfaces/required-windows-desktop-configuration.json",
       "type": "ae/windows-desktop-configuration",
       "version": "1.0.0"
     }

@@ -1096,5 +1096,8 @@
         }
       }
     }
+  },
+  "x-ourapps-modules": {
+    "desktop": "desktop/index.cjs"
   }
 }
